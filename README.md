@@ -98,6 +98,23 @@ See `docs/deployment/` for detailed setup instructions and configuration options
 - [Architecture Guide](docs/architecture/)
 - [API Documentation](docs/api/)
 - [Deployment Guide](docs/deployment/)
+- [Google Docs Integration](docs/google-docs-integration.md) - Setup guide for automatic doc synchronization
+
+### 📝 Google Docs Integration
+
+This repository supports automatic synchronization with Google Docs for seamless documentation collaboration:
+
+- **Write in Google Docs**: Use familiar collaborative editing tools
+- **Auto-sync to GitHub**: Changes automatically create pull requests  
+- **Version Control**: Maintain git history while using Google Docs
+- **Team Collaboration**: Multiple editors can work simultaneously
+
+Quick setup:
+```bash
+npm run docs:setup
+```
+
+See the [complete setup guide](docs/google-docs-integration.md) for detailed instructions.
 
 ## 🛠️ Development
 

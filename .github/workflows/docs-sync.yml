@@ -1,0 +1,65 @@
+# Google Docs Synchronization Workflow
+name: Sync Google Docs to GitHub
+
+on:
+  repository_dispatch:
+    types: [google-docs-updated]
+  workflow_dispatch:
+    inputs:
+      doc_id:
+        description: 'Google Doc ID to sync'
+        required: true
+        type: string
+      target_file:
+        description: 'Target markdown file path'
+        required: true
+        type: string
+
+jobs:
+  sync-docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Sync Google Doc
+        env:
+          GOOGLE_SERVICE_ACCOUNT_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
+          DOC_ID: ${{ github.event.inputs.doc_id || github.event.client_payload.doc_id }}
+          TARGET_FILE: ${{ github.event.inputs.target_file || github.event.client_payload.target_file }}
+        run: |
+          node scripts/docs-sync/sync-google-doc.js
+
+      - name: Create Pull Request
+        if: success()
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'docs: sync from Google Docs'
+          title: 'Auto-sync: Update documentation from Google Docs'
+          body: |
+            This PR contains automated updates from Google Docs.
+            
+            - **Source**: Google Doc ID `${{ env.DOC_ID }}`
+            - **Target**: `${{ env.TARGET_FILE }}`
+            - **Timestamp**: ${{ github.run_number }}
+            
+            Please review the changes before merging.
+          branch: docs-sync/${{ github.run_number }}
+          delete-branch: true

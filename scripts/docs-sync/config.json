@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "description": "Google Docs to GitHub synchronization configuration",
+  "github": {
+    "owner": "darshantogadiya98",
+    "repo": "ResturantSEO",
+    "branch": "main"
+  },
+  "google_docs": {
+    "service_account_key_secret": "google-docs-sync/service-account-key",
+    "webhook_secret": "google-docs-sync/webhook-secret"
+  },
+  "document_mappings": {
+    "api_documentation": {
+      "google_doc_id": "",
+      "github_file_path": "docs/api/API_DOCUMENTATION.md",
+      "description": "API Documentation - maps to Google Doc containing API reference"
+    },
+    "deployment_guide": {
+      "google_doc_id": "",
+      "github_file_path": "docs/deployment/DEPLOYMENT_GUIDE.md",
+      "description": "Deployment Guide - maps to Google Doc containing deployment instructions"
+    },
+    "readme": {
+      "google_doc_id": "",
+      "github_file_path": "README.md",
+      "description": "Main README - maps to Google Doc containing project overview"
+    }
+  },
+  "sync_options": {
+    "auto_create_pr": true,
+    "pr_title_prefix": "docs: sync from Google Docs",
+    "pr_branch_prefix": "docs-sync/",
+    "include_metadata_header": true,
+    "preserve_existing_frontmatter": true
+  },
+  "webhook": {
+    "endpoint": "/webhook/google-docs",
+    "port": 3000,
+    "verification_enabled": true
+  }
+}
