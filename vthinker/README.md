@@ -56,9 +56,9 @@ VThinker is a next-generation mind mapping and visual brainstorming tool that co
 
 ### 📤 Export
 - Export to JSON (save/load)
-- PNG export (coming soon)
-- PDF export (coming soon)
-- PowerPoint slides (coming soon)
+- PNG export (high-resolution image)
+- PDF export (formatted document)
+- PowerPoint slides (multi-slide presentation)
 
 ---
 
@@ -119,8 +119,12 @@ Navigate to `http://localhost:5173`
 
 ### Exporting Your Work
 1. Click "Export" in the header
-2. Choose format (JSON, PNG, PDF)
-3. Download your mind map
+2. Choose format:
+   - **JSON** - Save and restore your work
+   - **PNG Image** - High-resolution image export
+   - **PDF** - Formatted PDF document
+   - **Presentation** - Multi-slide PowerPoint with title, overview, and summary slides
+3. File downloads automatically
 
 ---
 
@@ -239,9 +243,10 @@ We welcome contributions! Here's how you can help:
 
 ---
 
-## 🆕 Latest Updates (v2.0)
+## 🆕 Latest Updates (v3.0)
 
 ### Major Feature Additions:
+- ✅ **Professional Export Suite** - PNG, PDF, and PowerPoint presentation exports
 - ✅ **Import from YouTube/URL/Text** - Generate mind maps from external content
 - ✅ **Image Nodes** - Add and display images in your mind maps
 - ✅ **Link Nodes** - Embed clickable web links
@@ -263,11 +268,12 @@ See [FUNBLOCKS_ANALYSIS.md](./FUNBLOCKS_ANALYSIS.md) for detailed feature compar
 
 ## 🐛 Known Issues
 
-- [ ] PNG/PDF export not yet implemented (foundation ready)
 - [ ] Undo/Redo not fully functional
 - [ ] AI responses are simulated (architecture ready for real API)
 - [ ] Import feature uses simulated AI (ready for real implementation)
 - [ ] No user authentication or cloud storage yet
+- [ ] Markdown export not yet implemented
+- [ ] Infographics export planned
 
 See [Issues](https://github.com/your-username/vthinker/issues) for full list.
 

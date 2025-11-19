@@ -8,8 +8,13 @@ import {
   useEdgesState,
   addEdge,
   Panel,
+  getRectOfNodes,
+  getTransformForBounds,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
+import pptxgen from 'pptxgenjs';
 
 import CanvasToolbar from './components/CanvasToolbar';
 import AISidebar from './components/AISidebar';
@@ -143,23 +148,248 @@ function App() {
   const exportToPNG = async () => {
     if (!reactFlowInstance) return;
 
-    const { getNodes } = reactFlowInstance;
-    const nodesBounds = getNodes().reduce(
-      (acc, node) => ({
-        minX: Math.min(acc.minX, node.position.x),
-        minY: Math.min(acc.minY, node.position.y),
-        maxX: Math.max(acc.maxX, node.position.x + 200),
-        maxY: Math.max(acc.maxY, node.position.y + 200),
-      }),
-      { minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity }
-    );
+    try {
+      const viewport = document.querySelector('.react-flow__viewport');
+      if (!viewport) {
+        alert('Canvas not found');
+        return;
+      }
 
-    const width = nodesBounds.maxX - nodesBounds.minX;
-    const height = nodesBounds.maxY - nodesBounds.minY;
+      // Hide controls and minimap for cleaner export
+      const controls = document.querySelector('.react-flow__controls');
+      const minimap = document.querySelector('.react-flow__minimap');
+      const panels = document.querySelectorAll('.react-flow__panel');
 
-    // This is a simplified version - in production you'd use html2canvas or similar
-    alert('PNG export would be implemented with html2canvas library');
-    setShowExportMenu(false);
+      const elementsToHide = [controls, minimap, ...panels].filter(Boolean);
+      elementsToHide.forEach(el => el.style.display = 'none');
+
+      // Capture canvas with html2canvas
+      const canvas = await html2canvas(viewport, {
+        backgroundColor: '#f8f9fa',
+        scale: 2, // Higher resolution
+        logging: false,
+      });
+
+      // Show hidden elements again
+      elementsToHide.forEach(el => el.style.display = '');
+
+      // Convert to PNG and download
+      const dataUrl = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.download = `vthinker-mindmap-${Date.now()}.png`;
+      link.href = dataUrl;
+      link.click();
+
+      setShowExportMenu(false);
+    } catch (error) {
+      console.error('PNG export failed:', error);
+      alert('Failed to export PNG. Please try again.');
+    }
+  };
+
+  const exportToPDF = async () => {
+    if (!reactFlowInstance) return;
+
+    try {
+      const viewport = document.querySelector('.react-flow__viewport');
+      if (!viewport) {
+        alert('Canvas not found');
+        return;
+      }
+
+      // Hide controls and minimap for cleaner export
+      const controls = document.querySelector('.react-flow__controls');
+      const minimap = document.querySelector('.react-flow__minimap');
+      const panels = document.querySelectorAll('.react-flow__panel');
+
+      const elementsToHide = [controls, minimap, ...panels].filter(Boolean);
+      elementsToHide.forEach(el => el.style.display = 'none');
+
+      // Capture canvas with html2canvas
+      const canvas = await html2canvas(viewport, {
+        backgroundColor: '#f8f9fa',
+        scale: 2,
+        logging: false,
+      });
+
+      // Show hidden elements again
+      elementsToHide.forEach(el => el.style.display = '');
+
+      // Convert canvas to image
+      const imgData = canvas.toDataURL('image/png');
+
+      // Create PDF with jsPDF
+      const pdf = new jsPDF({
+        orientation: canvas.width > canvas.height ? 'landscape' : 'portrait',
+        unit: 'px',
+        format: [canvas.width, canvas.height]
+      });
+
+      pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+      pdf.save(`vthinker-mindmap-${Date.now()}.pdf`);
+
+      setShowExportMenu(false);
+    } catch (error) {
+      console.error('PDF export failed:', error);
+      alert('Failed to export PDF. Please try again.');
+    }
+  };
+
+  const exportToSlides = async () => {
+    if (!reactFlowInstance) return;
+
+    try {
+      // Create PowerPoint presentation
+      const pptx = new pptxgen();
+
+      // Title slide
+      const titleSlide = pptx.addSlide();
+      titleSlide.background = { color: '0284c7' };
+      titleSlide.addText('VThinker Mind Map', {
+        x: 0.5,
+        y: 1.5,
+        w: 9,
+        h: 1.5,
+        fontSize: 44,
+        bold: true,
+        color: 'FFFFFF',
+        align: 'center',
+      });
+      titleSlide.addText('Visual Thinking Workspace', {
+        x: 0.5,
+        y: 3,
+        w: 9,
+        h: 0.5,
+        fontSize: 24,
+        color: 'e0f2fe',
+        align: 'center',
+      });
+
+      // Capture the canvas as image
+      const viewport = document.querySelector('.react-flow__viewport');
+      const controls = document.querySelector('.react-flow__controls');
+      const minimap = document.querySelector('.react-flow__minimap');
+      const panels = document.querySelectorAll('.react-flow__panel');
+
+      const elementsToHide = [controls, minimap, ...panels].filter(Boolean);
+      elementsToHide.forEach(el => el.style.display = 'none');
+
+      const canvas = await html2canvas(viewport, {
+        backgroundColor: '#f8f9fa',
+        scale: 1.5,
+        logging: false,
+      });
+
+      elementsToHide.forEach(el => el.style.display = '');
+
+      const imgData = canvas.toDataURL('image/png');
+
+      // Main mind map slide
+      const mainSlide = pptx.addSlide();
+      mainSlide.background = { color: 'f8f9fa' };
+      mainSlide.addText('Mind Map Overview', {
+        x: 0.5,
+        y: 0.3,
+        w: 9,
+        h: 0.5,
+        fontSize: 32,
+        bold: true,
+        color: '1e293b',
+      });
+      mainSlide.addImage({
+        data: imgData,
+        x: 0.5,
+        y: 1.2,
+        w: 9,
+        h: 5,
+      });
+
+      // Node details slides - one slide per major node
+      const majorNodes = nodes.filter(node =>
+        ['swot', 'thinkingHats', 'scamper', 'firstPrinciples', 'businessModel'].includes(node.type)
+      );
+
+      majorNodes.forEach((node, index) => {
+        const nodeSlide = pptx.addSlide();
+        nodeSlide.background = { color: 'FFFFFF' };
+
+        const titles = {
+          swot: 'SWOT Analysis',
+          thinkingHats: 'Six Thinking Hats',
+          scamper: 'SCAMPER Framework',
+          firstPrinciples: 'First Principles Thinking',
+          businessModel: 'Business Model Canvas',
+        };
+
+        nodeSlide.addText(titles[node.type] || 'Framework', {
+          x: 0.5,
+          y: 0.5,
+          w: 9,
+          h: 0.8,
+          fontSize: 36,
+          bold: true,
+          color: '0284c7',
+        });
+
+        nodeSlide.addText(node.data.topic || 'Your Topic', {
+          x: 0.5,
+          y: 1.5,
+          w: 9,
+          h: 0.5,
+          fontSize: 24,
+          color: '475569',
+        });
+
+        nodeSlide.addText('Framework applied to analyze and structure thinking', {
+          x: 0.5,
+          y: 2.5,
+          w: 9,
+          h: 3,
+          fontSize: 18,
+          color: '64748b',
+          valign: 'top',
+        });
+      });
+
+      // Summary slide
+      const summarySlide = pptx.addSlide();
+      summarySlide.background = { color: '0ea5e9' };
+      summarySlide.addText('Key Takeaways', {
+        x: 0.5,
+        y: 1.5,
+        w: 9,
+        h: 1,
+        fontSize: 40,
+        bold: true,
+        color: 'FFFFFF',
+        align: 'center',
+      });
+      summarySlide.addText(`Total Nodes: ${nodes.length}`, {
+        x: 0.5,
+        y: 3,
+        w: 9,
+        h: 0.5,
+        fontSize: 24,
+        color: 'e0f2fe',
+        align: 'center',
+      });
+      summarySlide.addText(`Connections: ${edges.length}`, {
+        x: 0.5,
+        y: 3.7,
+        w: 9,
+        h: 0.5,
+        fontSize: 24,
+        color: 'e0f2fe',
+        align: 'center',
+      });
+
+      // Save presentation
+      await pptx.writeFile({ fileName: `vthinker-presentation-${Date.now()}.pptx` });
+      setShowExportMenu(false);
+    } catch (error) {
+      console.error('PowerPoint export failed:', error);
+      alert('Failed to export to PowerPoint. Please try again.');
+    }
   };
 
   return (
@@ -199,24 +429,31 @@ function App() {
             </button>
 
             {showExportMenu && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
+              <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
                 <button
                   onClick={exportToJSON}
                   className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 text-sm"
                 >
-                  Export as JSON
+                  📄 Export as JSON
                 </button>
                 <button
                   onClick={exportToPNG}
                   className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 text-sm"
                 >
-                  Export as PNG
+                  🖼️ Export as PNG Image
                 </button>
                 <button
-                  onClick={() => alert('PDF export coming soon!')}
+                  onClick={exportToPDF}
                   className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 text-sm"
                 >
-                  Export as PDF
+                  📕 Export as PDF
+                </button>
+                <div className="border-t border-gray-200 my-1"></div>
+                <button
+                  onClick={exportToSlides}
+                  className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 text-sm font-medium"
+                >
+                  🎯 Export as Presentation
                 </button>
               </div>
             )}
