@@ -19,6 +19,10 @@ export default {
           800: '#075985',
           900: '#0c4a6e',
         },
+        canvas: {
+          bg: '#f8f9fa',
+          grid: '#e9ecef',
+        }
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
