@@ -32,18 +32,18 @@ const FrameworksModal = ({ isOpen, onClose, onSelectFramework }) => {
       color: 'red',
     },
     {
+      id: 'businessModel',
+      name: 'Business Model Canvas',
+      description: '9-block framework for designing and analyzing business models',
+      icon: Grid3x3,
+      color: 'indigo',
+    },
+    {
       id: 'mindMap',
       name: 'Mind Map',
       description: 'Visual diagram for organizing information around a central concept',
       icon: ListTree,
-      color: 'indigo',
-    },
-    {
-      id: 'brainstorm',
-      name: 'Free Brainstorm',
-      description: 'Open-ended creative ideation without constraints',
-      icon: Lightbulb,
-      color: 'yellow',
+      color: 'teal',
     },
   ];
 

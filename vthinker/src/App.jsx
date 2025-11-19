@@ -14,6 +14,7 @@ import '@xyflow/react/dist/style.css';
 import CanvasToolbar from './components/CanvasToolbar';
 import AISidebar from './components/AISidebar';
 import FrameworksModal from './components/FrameworksModal';
+import ImportModal from './components/ImportModal';
 import { nodeTypes } from './components/CustomNodes';
 import { Sparkles, Menu, Download } from 'lucide-react';
 
@@ -50,6 +51,7 @@ function App() {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [showAI, setShowAI] = useState(false);
   const [showFrameworks, setShowFrameworks] = useState(false);
+  const [showImport, setShowImport] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -71,6 +73,9 @@ function App() {
       text: 'New Idea',
       idea: 'Brilliant Thought',
       note: 'Note your thoughts here...',
+      image: 'Image',
+      link: 'Link',
+      task: 'Tasks',
     };
 
     const newNode = {
@@ -78,6 +83,24 @@ function App() {
       type,
       position,
       data: { label: labels[type] || 'New Node' },
+    };
+
+    setNodes((nds) => [...nds, newNode]);
+  }, [reactFlowInstance, setNodes]);
+
+  // Handle import from URL/YouTube
+  const handleImport = useCallback((mindMapData) => {
+    // In production, this would process the AI-generated mind map
+    // For now, just add a sample node
+    const position = reactFlowInstance
+      ? reactFlowInstance.project({ x: 300, y: 200 })
+      : { x: 300, y: 200 };
+
+    const newNode = {
+      id: `${nodeId++}`,
+      type: 'text',
+      position,
+      data: { label: mindMapData.topic },
     };
 
     setNodes((nds) => [...nds, newNode]);
@@ -244,6 +267,7 @@ function App() {
               onFitView={onFitView}
               onExport={() => setShowExportMenu(!showExportMenu)}
               onShowFrameworks={() => setShowFrameworks(true)}
+              onShowImport={() => setShowImport(true)}
               onUndo={() => console.log('Undo')}
               onRedo={() => console.log('Redo')}
             />
@@ -276,6 +300,13 @@ function App() {
           isOpen={showFrameworks}
           onClose={() => setShowFrameworks(false)}
           onSelectFramework={addFrameworkNode}
+        />
+
+        {/* Import Modal */}
+        <ImportModal
+          isOpen={showImport}
+          onClose={() => setShowImport(false)}
+          onImport={handleImport}
         />
       </div>
     </div>

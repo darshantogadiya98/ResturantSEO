@@ -18,10 +18,20 @@ VThinker is a next-generation mind mapping and visual brainstorming tool that co
 
 ### 🧩 Smart Nodes
 - **Text Nodes** - Quick idea capture
-- **Idea Nodes** - Highlight brilliant thoughts
-- **Note Nodes** - Detailed content
-- **Framework Nodes** - SWOT, Six Thinking Hats, and more
+- **Idea Nodes** - Highlight brilliant thoughts with lightbulb icons
+- **Note Nodes** - Detailed multi-line content
+- **Image Nodes** - Add visual content with image URLs
+- **Link Nodes** - Embed web URLs with clickable links
+- **Task Nodes** - Interactive checklists with completion tracking
+- **Framework Nodes** - Structured thinking templates
 - Double-click to edit, drag to move
+
+### 📥 Content Import (NEW!)
+- **YouTube to Mind Map** - Convert YouTube videos to structured maps
+- **URL to Mind Map** - Transform web pages into mind maps
+- **Text to Mind Map** - Paste any text and auto-generate structure
+- AI-powered content extraction
+- One-click mind map generation
 
 ### 🤖 AI Assistant
 - Chat-based AI helper
@@ -33,8 +43,9 @@ VThinker is a next-generation mind mapping and visual brainstorming tool that co
 ### 🧠 Thinking Frameworks
 - **SWOT Analysis** - Strengths, Weaknesses, Opportunities, Threats
 - **Six Thinking Hats** - Multiple perspective thinking
-- **SCAMPER** - Creative problem-solving (coming soon)
-- **First Principles** - Fundamental reasoning (coming soon)
+- **SCAMPER** - Substitute, Combine, Adapt, Modify, Put to other uses, Eliminate, Reverse
+- **First Principles** - Break down to fundamental truths
+- **Business Model Canvas** - 9-block business framework
 - **Mind Maps** - Hierarchical organization
 
 ### 🔗 Connections
@@ -228,12 +239,34 @@ We welcome contributions! Here's how you can help:
 
 ---
 
+## 🆕 Latest Updates (v2.0)
+
+### Major Feature Additions:
+- ✅ **Import from YouTube/URL/Text** - Generate mind maps from external content
+- ✅ **Image Nodes** - Add and display images in your mind maps
+- ✅ **Link Nodes** - Embed clickable web links
+- ✅ **Task List Nodes** - Interactive checklists with checkboxes
+- ✅ **SCAMPER Framework** - Creative problem-solving method
+- ✅ **First Principles Thinking** - Break down complex problems
+- ✅ **Business Model Canvas** - Complete 9-block business framework
+
+### Comparison with FunBlocks AIFlow:
+VThinker now includes most of the core features from FunBlocks AIFlow:
+- ✅ Multiple thinking frameworks
+- ✅ Import from YouTube/URLs
+- ✅ Advanced node types (image, link, task)
+- ✅ AI-assisted brainstorming
+- ⏳ Content transformation (slides/infographics) - Coming soon
+- ⏳ Real AI API integration - Coming soon
+
+See [FUNBLOCKS_ANALYSIS.md](./FUNBLOCKS_ANALYSIS.md) for detailed feature comparison.
+
 ## 🐛 Known Issues
 
-- [ ] PNG export not yet implemented (uses placeholder alert)
-- [ ] PDF export not yet implemented
+- [ ] PNG/PDF export not yet implemented (foundation ready)
 - [ ] Undo/Redo not fully functional
-- [ ] AI responses are simulated (not connected to real API yet)
+- [ ] AI responses are simulated (architecture ready for real API)
+- [ ] Import feature uses simulated AI (ready for real implementation)
 - [ ] No user authentication or cloud storage yet
 
 See [Issues](https://github.com/your-username/vthinker/issues) for full list.
